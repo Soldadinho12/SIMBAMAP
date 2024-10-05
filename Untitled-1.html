@@ -1,0 +1,49 @@
+<script>
+// server.js
+    const express = require('express');
+    const app = express();
+    const port = 3000;
+    
+    // Dados de exemplo
+    const data = [
+        { estacao: 'Estação 1', horario: '13:59', data: '19/08/2024' },
+        { estacao: 'Estação 2', horario: '03:50', data: '21/08/2024' }
+    ];
+    
+    app.get('/api/data', (req, res) => {
+        res.json(data);
+    });
+    
+    app.listen(port, () => {
+        console.log(`Servidor rodando em http://localhost:${port}`);
+    });
+    </script>
+<script>
+    function sendData(data) {
+        fetch('http://localhost:3000/api/receive-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.text())
+        .then(message => console.log(message))
+        .catch(error => console.error('Erro ao enviar dados:', error));
+    }
+
+    // Exemplo de uso
+    sendData({ estacao: 'Estação 1', horario: '13:59', data: '19/08/2024' });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('http://localhost:3000/api/data')
+            .then(response => response.json())
+            .then(data => {
+                updateTable(data);
+            })
+            .catch(error => console.error('Erro ao obter dados:', error));
+    });
+</script>

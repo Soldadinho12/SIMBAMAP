@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="assets/images/simbolo.png" type="image/x-icon">
+    <title>SIMBA-MAP</title>
+    <link rel="stylesheet" href="assets/web/assets/mobirise-icons2/mobirise2.css">
+    <link rel="stylesheet" href="assets/web/assets/mobirise-icons-bold/mobirise-icons-bold.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="assets/parallax/jarallax.css">
+    <link rel="stylesheet" href="assets/dropdown/css/style.css">
+    <link rel="stylesheet" href="assets/socicon/css/styles.css">
+    <link rel="stylesheet" href="assets/theme/css/style.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Fjalla+One:400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fjalla+One:400&display=swap"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Epilogue:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Epilogue:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700&display=swap"></noscript>
+    <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=6g7D1n"><link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=6g7D1n" type="text/css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("assets/images/background3.jpg");
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .popup {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            top: 15px;
+            right: 10px;
+            max-width: 300px;
+        }
+
+        .popup.show {
+            display: block;
+        }
+
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ccc;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            line-height: 25px;
+        }
+        
+        .image-container {
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 37.5%;
+    height: auto;
+    text-align: center;
+    border: 5px solid #000; /* Aumente o valor para uma borda mais grossa */
+}
+
+        .map-image {
+            width: 100%;
+            height: auto;
+        }
+
+        .overlay-image {
+            position: absolute;
+            top: 39%;
+            left: 40%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            z-index: 2;
+            cursor: pointer;
+        }
+
+        .additional-image {
+    position: absolute;
+    top: calc(50% - 60px); /* Ajustado para mover a imagem mais para baixo */
+    left: calc(50% - 150px); /* Ajustado para mover a imagem mais para a direita */
+    width: 75px; /* Aumentando a largura da imagem adicional */
+    height: auto; /* Mantendo a proporção da imagem */
+    z-index: 1;
+}
+
+        .table-container {
+            position: absolute;
+            right: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            border: 2px solid #000;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .table-container h1 {
+            margin-bottom: 20px;
+        }
+
+        #monitoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+
+        #monitoring-table th, #monitoring-table td {
+            text-align: center;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .blink {
+            animation: blink 0.5s linear 3;
+        }
+    </style>
+</head>
+<body>
+
+<section data-bs-version="5.1" class="menu menu1 cid-u4gB6dK5Xl" once="menu" id="menu1-q">
+    <nav class="navbar navbar-dropdown navbar-fixed-top navbar-expand-lg">
+        <div class="container">
+            <div class="navbar-brand">
+                <span class="navbar-logo">
+                    <a href="home.html">
+                        <img src="assets/images/simbolo-96x96.png" alt="Mobirise Website Builder" style="height: 3rem;">
+                    </a>
+                </span>
+                <span class="navbar-caption-wrap"><a class="navbar-caption text-white text-primary display-5" href="index.html">S.I.M.B.A.</a></span>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html"><span class="mobi-mbri mobi-mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbrib-map-pin mbr-iconfont mbr-iconfont-btn"></span>SIMBA-Map</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#slider4-x"><span class="mobi-mbri mobi-mbri-users mbr-iconfont mbr-iconfont-btn"></span>Saiba mais</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="estacao-simba.html"><span class="mobi-mbri mobi-mbri-setting mbr-iconfont mbr-iconfont-btn"></span>Nosso sistema</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#contacts1-z"><span class="mobi-mbri mobi-mbri-contact-form mbr-iconfont mbr-iconfont-btn"></span>Contato</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<div class="image-container">
+    <img src="assets/images/mapa1.jpg" alt="Imagem do mapa" class="map-image">
+    <img src="assets/images/simbolo.png" alt="Imagem sobreposta" class="overlay-image" id="overlayImage">
+    <img src="assets/images/Casa Soldadinho.png" alt="Imagem adicional" class="additional-image">
+</div>
+
+<div class="table-container">
+    <h1>Dados de Monitoramento</h1>
+    <table id="monitoring-table">
+        <thead>
+            <tr>
+                <th>Parâmetro</th>
+                <th>Última Detecção</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Estação</td>
+                <td id="station">-</td>
+            </tr>
+            <tr>
+                <td>Horário</td>
+                <td id="time">-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="popup" class="popup">
+    <button class="close-btn" onclick="togglePopup()">×</button>
+    <h2>Estação 01</h2>
+    <p>Última Detecção: <span id="detectionInfo">-</span></p>
+    <p>Coordenadas: <a href="https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9" target="_blank">https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9</a></p>
+</div>
+
+<script>
+    var popup = document.getElementById("popup");
+    var overlayImage = document.getElementById("overlayImage");
+    var detectionInfo = document.getElementById("detectionInfo");
+
+    // Variáveis para armazenar os dados anteriores
+    var previousData = {
+        station: '',
+        time: ''
+    };
+
+    function togglePopup() {
+        if (popup.classList.contains("show")) {
+            popup.classList.remove("show");
+        } else {
+            var overlayRect = overlayImage.getBoundingClientRect();
+            var popupWidth = popup.offsetWidth;
+            var popupHeight = popup.offsetHeight;
+            var top = overlayRect.top - popupHeight - 10;
+            var left = overlayRect.left + (overlayRect.width / 2) - (popupWidth / 2);
+
+            popup.style.top = top + "px";
+            popup.style.left = left + "px";
+            popup.classList.add("show");
+        }
+    }
+
+    function updateTable(data) {
+        document.getElementById("station").textContent = data.station || '-';
+        document.getElementById("time").textContent = data.time || '-';
+        detectionInfo.textContent = `Estação: ${data.station || '-'}, Hora: ${data.time || '-'}`;
+    }
+
+    async function fetchDataAndUpdateTable() {
+        try {
+            const response = await fetch("http://192.168.209.231/data");
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+
+            // Verifica se os novos dados são diferentes dos dados anteriores
+            if (data.station !== previousData.station || data.time !== previousData.time) {
+                updateTable(data);
+
+                // Adiciona a classe de piscar apenas se os dados forem diferentes
+                overlayImage.classList.add('blink');
+                setTimeout(() => {
+                    overlayImage.classList.remove('blink');
+                }, 2500);
+
+                // Atualiza os dados anteriores com os novos dados
+                previousData = data;
+            }
+        } catch (error) {
+            console.error('Erro ao obter dados:', error);
+
+            document.querySelector('.table-container').innerHTML = `<h1>Erro ao carregar dados</h1><p>Por favor, tente novamente mais tarde.</p>`;
+        }
+    }
+
+    overlayImage.addEventListener("click", togglePopup);
+    setInterval(fetchDataAndUpdateTable, 5000);
+</script>
+
+
+</body>
+</html>
