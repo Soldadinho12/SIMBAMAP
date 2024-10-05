@@ -71,15 +71,15 @@
         }
         
         .image-container {
-    position: absolute;
-    left: 10%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 37.5%;
-    height: auto;
-    text-align: center;
-    border: 5px solid #000; /* Aumente o valor para uma borda mais grossa */
-}
+            position: absolute;
+            left: 10%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 37.5%;
+            height: auto;
+            text-align: center;
+            border: 5px solid #000; /* Aumente o valor para uma borda mais grossa */
+        }
 
         .map-image {
             width: 100%;
@@ -98,13 +98,13 @@
         }
 
         .additional-image {
-    position: absolute;
-    top: calc(50% - 60px); /* Ajustado para mover a imagem mais para baixo */
-    left: calc(50% - 150px); /* Ajustado para mover a imagem mais para a direita */
-    width: 75px; /* Aumentando a largura da imagem adicional */
-    height: auto; /* Mantendo a proporção da imagem */
-    z-index: 1;
-}
+            position: absolute;
+            top: calc(50% - 60px); /* Ajustado para mover a imagem mais para baixo */
+            left: calc(50% - 150px); /* Ajustado para mover a imagem mais para a direita */
+            width: 75px; /* Aumentando a largura da imagem adicional */
+            height: auto; /* Mantendo a proporção da imagem */
+            z-index: 1;
+        }
 
         .table-container {
             position: absolute;
@@ -139,6 +139,39 @@
 
         .blink {
             animation: blink 0.5s linear 3;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .image-container {
+                width: 90%; /* Use more width on smaller screens */
+                left: 50%; /* Center horizontally */
+                transform: translate(-50%, -50%); /* Adjust for centering */
+            }
+
+            .map-image {
+                width: 100%; /* Ensure map image takes full width */
+                height: auto; /* Maintain aspect ratio */
+            }
+
+            .table-container {
+                width: 90%; /* Use more width on smaller screens */
+                right: 5%; /* Center the table container */
+                top: auto; /* Remove top positioning */
+                transform: none; /* Reset transform */
+                margin: 20px auto; /* Center with margin */
+            }
+
+            /* Make the table responsive */
+            #monitoring-table {
+                display: block; /* Enable block display */
+                overflow-x: auto; /* Add horizontal scrolling */
+                white-space: nowrap; /* Prevent wrapping */
+            }
+
+            #monitoring-table th, #monitoring-table td {
+                min-width: 120px; /* Set a minimum width for cells */
+            }
         }
     </style>
 </head>
@@ -275,7 +308,6 @@
     overlayImage.addEventListener("click", togglePopup);
     setInterval(fetchDataAndUpdateTable, 5000);
 </script>
-
 
 </body>
 </html>
