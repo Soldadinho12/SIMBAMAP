@@ -211,7 +211,8 @@
     <p>Coordenadas: <a href="https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9" target="_blank">https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9</a></p>
 </div>
 
- <script>
+
+    <script>
         var popup = document.getElementById("popup");
         var overlayImage = document.getElementById("overlayImage");
         var detectionInfo = document.getElementById("detectionInfo");
@@ -270,21 +271,10 @@
 
         // Adiciona evento de clique à imagem sobreposta
         overlayImage.addEventListener("click", togglePopup);
-     
-function checkForNewDataPeriodically() {
-    setInterval(() => {
-        checkForNewData();
-    }, 5000); // Verifica a cada 5 segundos
-}
 
-// Chama a função ao carregar a página
-window.onload = () => {
-    checkForNewData();
-    checkForNewDataPeriodically();
-};
-
+        // Verifica por novos dados ao carregar a página
+        window.onload = checkForNewData;
     </script>
-
 
 
 
