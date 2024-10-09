@@ -71,15 +71,15 @@
         }
         
         .image-container {
-            position: absolute;
-            left: 10%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 37.5%;
-            height: auto;
-            text-align: center;
-            border: 5px solid #000; /* Aumente o valor para uma borda mais grossa */
-        }
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 37.5%;
+    height: auto;
+    text-align: center;
+    border: 5px solid #000; /* Aumente o valor para uma borda mais grossa */
+}
 
         .map-image {
             width: 100%;
@@ -98,13 +98,13 @@
         }
 
         .additional-image {
-            position: absolute;
-            top: calc(50% - 60px); /* Ajustado para mover a imagem mais para baixo */
-            left: calc(50% - 150px); /* Ajustado para mover a imagem mais para a direita */
-            width: 75px; /* Aumentando a largura da imagem adicional */
-            height: auto; /* Mantendo a proporção da imagem */
-            z-index: 1;
-        }
+    position: absolute;
+    top: calc(50% - 60px); /* Ajustado para mover a imagem mais para baixo */
+    left: calc(50% - 150px); /* Ajustado para mover a imagem mais para a direita */
+    width: 75px; /* Aumentando a largura da imagem adicional */
+    height: auto; /* Mantendo a proporção da imagem */
+    z-index: 1;
+}
 
         .table-container {
             position: absolute;
@@ -140,39 +140,6 @@
         .blink {
             animation: blink 0.5s linear 3;
         }
-
-        /* Responsive styles */
-        @media (max-width: 768px) {
-            .image-container {
-                width: 90%; /* Use more width on smaller screens */
-                left: 50%; /* Center horizontally */
-                transform: translate(-50%, -50%); /* Adjust for centering */
-            }
-
-            .map-image {
-                width: 100%; /* Ensure map image takes full width */
-                height: auto; /* Maintain aspect ratio */
-            }
-
-            .table-container {
-                width: 90%; /* Use more width on smaller screens */
-                right: 5%; /* Center the table container */
-                top: auto; /* Remove top positioning */
-                transform: none; /* Reset transform */
-                margin: 20px auto; /* Center with margin */
-            }
-
-            /* Make the table responsive */
-            #monitoring-table {
-                display: block; /* Enable block display */
-                overflow-x: auto; /* Add horizontal scrolling */
-                white-space: nowrap; /* Prevent wrapping */
-            }
-
-            #monitoring-table th, #monitoring-table td {
-                min-width: 120px; /* Set a minimum width for cells */
-            }
-        }
     </style>
 </head>
 <body>
@@ -186,7 +153,7 @@
                         <img src="assets/images/simbolo-96x96.png" alt="Mobirise Website Builder" style="height: 3rem;">
                     </a>
                 </span>
-                <span class="navbar-caption-wrap"><a class="navbar-caption text-white text-primary display-5" href="index.html">S.I.M.B.A.</a></span>
+                <span class="navbar-caption-wrap"><a class="navbar-caption text-white text-primary display-5" href="home.html">S.I.M.B.A.</a></span>
             </div>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbarSupportedContent" data-bs-target="#navbarSupportedContent" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <div class="hamburger">
@@ -198,11 +165,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html"><span class="mobi-mbri mobi-mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="home.html"><span class="mobi-mbri mobi-mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>
                     <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbrib-map-pin mbr-iconfont mbr-iconfont-btn"></span>SIMBA-Map</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#slider4-x"><span class="mobi-mbri mobi-mbri-users mbr-iconfont mbr-iconfont-btn"></span>Saiba mais</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="home.html#slider4-x"><span class="mobi-mbri mobi-mbri-users mbr-iconfont mbr-iconfont-btn"></span>Saiba mais</a></li>
                     <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="estacao-simba.html"><span class="mobi-mbri mobi-mbri-setting mbr-iconfont mbr-iconfont-btn"></span>Nosso sistema</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#contacts1-z"><span class="mobi-mbri mobi-mbri-contact-form mbr-iconfont mbr-iconfont-btn"></span>Contato</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="home.html#contacts1-z"><span class="mobi-mbri mobi-mbri-contact-form mbr-iconfont mbr-iconfont-btn"></span>Contato</a></li>
                 </ul>
             </div>
         </div>
@@ -274,7 +241,7 @@
     function updateTable(data) {
         document.getElementById("station").textContent = data.station || '-';
         document.getElementById("time").textContent = data.time || '-';
-        detectionInfo.textContent = Estação: ${data.station || '-'}, Hora: ${data.time || '-'};
+        detectionInfo.textContent = `Estação: ${data.station || '-'}, Hora: ${data.time || '-'}`;
     }
 
     async function fetchDataAndUpdateTable() {
@@ -301,13 +268,14 @@
         } catch (error) {
             console.error('Erro ao obter dados:', error);
 
-            document.querySelector('.table-container').innerHTML = <h1>Erro ao carregar dados</h1><p>Por favor, tente novamente mais tarde.</p>;
+            document.querySelector('.table-container').innerHTML = `<h1>Erro ao carregar dados</h1><p>Por favor, tente novamente mais tarde.</p>`;
         }
     }
 
     overlayImage.addEventListener("click", togglePopup);
     setInterval(fetchDataAndUpdateTable, 5000);
 </script>
+
 
 </body>
 </html>
