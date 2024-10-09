@@ -239,42 +239,48 @@
     }
 
     function updateTable(data) {
-        document.getElementById("station").textContent = data.station || '-';
-        document.getElementById("time").textContent = data.time || '-';
-        detectionInfo.textContent = `Estação: ${data.station || '-'}, Hora: ${data.time || '-'}`;
+        // Atualiza a tabela com os dados recebidos
+        document.getElementById("station").textContent = data.estacao || '-';
+        document.getElementById("time").textContent = data.horario || '-';
+        detectionInfo.textContent = `Estação: ${data.estacao || '-'}, Hora: ${data.horario || '-'}`;
     }
 
-    async function fetchDataAndUpdateTable() {
-        try {
-            const response = await fetch("http://192.168.209.231/data");
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
+    // Supondo que os dados cheguem automaticamente à página via algum método (exemplo: WebSocket ou AJAX)
+    function receiveDataFromESP32(data) {
+        // Verifica se os novos dados são diferentes dos dados anteriores
+        if (data.estacao !== previousData.station || data.horario !== previousData.time) {
+            updateTable(data);
 
-            // Verifica se os novos dados são diferentes dos dados anteriores
-            if (data.station !== previousData.station || data.time !== previousData.time) {
-                updateTable(data);
+            // Adiciona a classe de piscar apenas se os dados forem diferentes
+            overlayImage.classList.add('blink');
+            setTimeout(() => {
+                overlayImage.classList.remove('blink');
+            }, 2500);
 
-                // Adiciona a classe de piscar apenas se os dados forem diferentes
-                overlayImage.classList.add('blink');
-                setTimeout(() => {
-                    overlayImage.classList.remove('blink');
-                }, 2500);
-
-                // Atualiza os dados anteriores com os novos dados
-                previousData = data;
-            }
-        } catch (error) {
-            console.error('Erro ao obter dados:', error);
-
-            document.querySelector('.table-container').innerHTML = `<h1>Erro ao carregar dados</h1><p>Por favor, tente novamente mais tarde.</p>`;
+            // Atualiza os dados anteriores com os novos dados
+            previousData.station = data.estacao;
+            previousData.time = data.horario;
         }
     }
 
+    // Função simulada para receber dados (aqui você pode substituir pelo método de recebimento real)
+    // Esta função deve ser chamada quando o ESP32 enviar os dados para a página
+    // Exemplo: via WebSocket ou outro canal direto
+    function simulateIncomingData() {
+        const simulatedData = {
+            estacao: "Estação 01",
+            horario: new Date().toLocaleTimeString()
+        };
+        receiveDataFromESP32(simulatedData);
+    }
+
+    // Adiciona evento de clique à imagem sobreposta
     overlayImage.addEventListener("click", togglePopup);
-    setInterval(fetchDataAndUpdateTable, 5000);
+
+    // Para fins de teste, simulamos dados chegando a cada 5 segundos
+    setInterval(simulateIncomingData, 5000);
 </script>
+
 
 
 </body>
