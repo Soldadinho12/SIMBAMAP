@@ -211,75 +211,80 @@
     <p>Coordenadas: <a href="https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9" target="_blank">https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9</a></p>
 </div>
 
-<script>
-    var popup = document.getElementById("popup");
-    var overlayImage = document.getElementById("overlayImage");
-    var detectionInfo = document.getElementById("detectionInfo");
+ <script>
+        var popup = document.getElementById("popup");
+        var overlayImage = document.getElementById("overlayImage");
+        var detectionInfo = document.getElementById("detectionInfo");
 
-    // Variáveis para armazenar os dados anteriores
-    var previousData = {
-        station: '',
-        time: ''
-    };
-
-    function togglePopup() {
-        if (popup.classList.contains("show")) {
-            popup.classList.remove("show");
-        } else {
-            var overlayRect = overlayImage.getBoundingClientRect();
-            var popupWidth = popup.offsetWidth;
-            var popupHeight = popup.offsetHeight;
-            var top = overlayRect.top - popupHeight - 10;
-            var left = overlayRect.left + (overlayRect.width / 2) - (popupWidth / 2);
-
-            popup.style.top = top + "px";
-            popup.style.left = left + "px";
-            popup.classList.add("show");
+        // Função para extrair parâmetros da URL
+        function getURLParameters() {
+            var params = {};
+            var queryString = window.location.search.substring(1);
+            var regex = /([^&=]+)=([^&]*)/g;
+            var m;
+            while (m = regex.exec(queryString)) {
+                params[decodeURIComponent(m[1])] = decodeURIComponent(m[2]);
+            }
+            return params;
         }
-    }
 
-    function updateTable(data) {
-        // Atualiza a tabela com os dados recebidos
-        document.getElementById("station").textContent = data.estacao || '-';
-        document.getElementById("time").textContent = data.horario || '-';
-        detectionInfo.textContent = `Estação: ${data.estacao || '-'}, Hora: ${data.horario || '-'}`;
-    }
-
-    // Supondo que os dados cheguem automaticamente à página via algum método (exemplo: WebSocket ou AJAX)
-    function receiveDataFromESP32(data) {
-        // Verifica se os novos dados são diferentes dos dados anteriores
-        if (data.estacao !== previousData.station || data.horario !== previousData.time) {
-            updateTable(data);
-
-            // Adiciona a classe de piscar apenas se os dados forem diferentes
-            overlayImage.classList.add('blink');
-            setTimeout(() => {
-                overlayImage.classList.remove('blink');
-            }, 2500);
-
-            // Atualiza os dados anteriores com os novos dados
-            previousData.station = data.estacao;
-            previousData.time = data.horario;
+        function updateTable(data) {
+            document.getElementById("station").textContent = data.station || '-';
+            document.getElementById("time").textContent = data.time || '-';
+            detectionInfo.textContent = `Estação: ${data.station || '-'}, Hora: ${data.time || '-'}`;
         }
-    }
 
-    // Função simulada para receber dados (aqui você pode substituir pelo método de recebimento real)
-    // Esta função deve ser chamada quando o ESP32 enviar os dados para a página
-    // Exemplo: via WebSocket ou outro canal direto
-    function simulateIncomingData() {
-        const simulatedData = {
-            estacao: "Estação 01",
-            horario: new Date().toLocaleTimeString()
-        };
-        receiveDataFromESP32(simulatedData);
-    }
+        function checkForNewData() {
+            var data = getURLParameters();
 
-    // Adiciona evento de clique à imagem sobreposta
-    overlayImage.addEventListener("click", togglePopup);
+            // Se houver dados na URL, atualiza a tabela
+            if (data.station && data.time) {
+                updateTable(data);
 
-    // Para fins de teste, simulamos dados chegando a cada 5 segundos
-    setInterval(simulateIncomingData, 5000);
-</script>
+                // Animação de piscar na imagem
+                overlayImage.classList.add('blink');
+                setTimeout(() => {
+                    overlayImage.classList.remove('blink');
+                }, 2500);
+
+                // Limpa os parâmetros da URL para evitar atualização contínua
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        function togglePopup() {
+            if (popup.classList.contains("show")) {
+                popup.classList.remove("show");
+            } else {
+                var overlayRect = overlayImage.getBoundingClientRect();
+                var popupWidth = popup.offsetWidth;
+                var popupHeight = popup.offsetHeight;
+                var top = overlayRect.top - popupHeight - 10;
+                var left = overlayRect.left + (overlayRect.width / 2) - (popupWidth / 2);
+
+                popup.style.top = top + "px";
+                popup.style.left = left + "px";
+                popup.classList.add("show");
+            }
+        }
+
+        // Adiciona evento de clique à imagem sobreposta
+        overlayImage.addEventListener("click", togglePopup);
+     
+function checkForNewDataPeriodically() {
+    setInterval(() => {
+        checkForNewData();
+    }, 5000); // Verifica a cada 5 segundos
+}
+
+// Chama a função ao carregar a página
+window.onload = () => {
+    checkForNewData();
+    checkForNewDataPeriodically();
+};
+
+    </script>
+
 
 
 
