@@ -237,41 +237,73 @@
 </section>
 
 <script>
-    function showPopup() {
-        document.getElementById('popup').classList.add('show');
-    }
+    var popup = document.getElementById("popup");
+    var overlayImage = document.getElementById("overlayImage");
+    var detectionInfo = document.getElementById("detectionInfo");
 
-    function closePopup() {
-        document.getElementById('popup').classList.remove('show');
-    }
+    // Variáveis para armazenar os dados anteriores
+    var previousData = {
+        station: '',
+        time: ''
+    };
 
-    function fetchMonitoringData() {
-        // Simulando a ausência de dados recebidos
-        const data = []; // Array vazio para simular falta de dados
+    function togglePopup() {
+        if (popup.classList.contains("show")) {
+            popup.classList.remove("show");
+        } else {
+            var overlayRect = overlayImage.getBoundingClientRect();
+            var popupWidth = popup.offsetWidth;
+            var popupHeight = popup.offsetHeight;
+            var top = overlayRect.top - popupHeight - 10;
+            var left = overlayRect.left + (overlayRect.width / 2) - (popupWidth / 2);
 
-        // Preencher a tabela com os dados
-        const tbody = document.getElementById("table-body");
-        tbody.innerHTML = ""; // Limpar a tabela antes de preencher
-
-        if (data.length > 0) {
-            data.forEach(item => {
-                const row = document.createElement("tr");
-                const stationCell = document.createElement("td");
-                const timeCell = document.createElement("td");
-
-                stationCell.textContent = item.station;
-                timeCell.textContent = item.time;
-
-                row.appendChild(stationCell);
-                row.appendChild(timeCell);
-                tbody.appendChild(row);
-            });
+            popup.style.top = top + "px";
+            popup.style.left = left + "px";
+            popup.classList.add("show");
         }
-        // A tabela permanece como está, caso não haja dados
     }
 
-    // Chama a função ao carregar a página
-    window.onload = fetchMonitoringData;
+    function updateTable(data) {
+        // Atualiza a tabela com os dados recebidos
+        document.getElementById("station").textContent = data.estacao || '-';
+        document.getElementById("time").textContent = data.horario || '-';
+        detectionInfo.textContent = `Estação: ${data.estacao || '-'}, Hora: ${data.horario || '-'}`;
+    }
+
+    // Supondo que os dados cheguem automaticamente à página via algum método (exemplo: WebSocket ou AJAX)
+    function receiveDataFromESP32(data) {
+        // Verifica se os novos dados são diferentes dos dados anteriores
+        if (data.estacao !== previousData.station || data.horario !== previousData.time) {
+            updateTable(data);
+
+            // Adiciona a classe de piscar apenas se os dados forem diferentes
+            overlayImage.classList.add('blink');
+            setTimeout(() => {
+                overlayImage.classList.remove('blink');
+            }, 2500);
+
+            // Atualiza os dados anteriores com os novos dados
+            previousData.station = data.estacao;
+            previousData.time = data.horario;
+        }
+    }
+
+    // Função simulada para receber dados (aqui você pode substituir pelo método de recebimento real)
+    // Esta função deve ser chamada quando o ESP32 enviar os dados para a página
+    // Exemplo: via WebSocket ou outro canal direto
+    function simulateIncomingData() {
+        const simulatedData = {
+            estacao: "Estação 01",
+            horario: new Date().toLocaleTimeString()
+        };
+        receiveDataFromESP32(simulatedData);
+    }
+
+    // Adiciona evento de clique à imagem sobreposta
+    overlayImage.addEventListener("click", togglePopup);
+
+    // Para fins de teste, simulamos dados chegando a cada 5 segundos
+    setInterval(simulateIncomingData, 5000);
 </script>
 
 <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
