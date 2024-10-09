@@ -199,114 +199,81 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
                     <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html"><span class="mobi-mbri mobi-mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbrib-map-pin mbr-iconfont mbr-iconfont-btn"></span>SIMBA-Map</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#slider4-x"><span class="mobi-mbri mobi-mbri-users mbr-iconfont mbr-iconfont-btn"></span>Saiba mais</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="estacao-simba.html"><span class="mobi-mbri mobi-mbri-setting mbr-iconfont mbr-iconfont-btn"></span>Nosso sistema</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#contacts1-z"><span class="mobi-mbri mobi-mbri-contact-form mbr-iconfont mbr-iconfont-btn"></span>Contato</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbri-speed mbr-iconfont mbr-iconfont-btn"></span>Monitoramento</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 </section>
 
-<div class="image-container">
-    <img src="assets/images/mapa1.jpg" alt="Imagem do mapa" class="map-image">
-    <img src="assets/images/simbolo.png" alt="Imagem sobreposta" class="overlay-image" id="overlayImage">
-    <img src="assets/images/Casa Soldadinho.png" alt="Imagem adicional" class="additional-image">
-</div>
+<section id="content" class="container">
+    <!-- Conteúdo da página -->
+    <div class="image-container">
+        <img class="map-image" src="assets/images/mapa.jpg" alt="Map Image">
+        <img class="overlay-image blink" src="assets/images/pino.png" alt="Overlay Image" onclick="showPopup()">
+    </div>
 
-<div class="table-container">
-    <h1>Dados de Monitoramento</h1>
-    <table id="monitoring-table">
-        <thead>
-            <tr>
-                <th>Parâmetro</th>
-                <th>Última Detecção</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Estação</td>
-                <td id="station">-</td>
-            </tr>
-            <tr>
-                <td>Horário</td>
-                <td id="time">-</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+    <div class="table-container">
+        <h1>Dados Recebidos</h1>
+        <table id="monitoring-table" border="1">
+            <thead>
+                <tr>
+                    <th>Estação</th>
+                    <th>Horário</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <!-- Dados da tabela serão preenchidos aqui -->
+            </tbody>
+        </table>
+    </div>
+</section>
 
-<div id="popup" class="popup">
-    <button class="close-btn" onclick="togglePopup()">×</button>
-    <h2>Estação 01</h2>
-    <p>Última Detecção: <span id="detectionInfo">-</span></p>
-    <p>Coordenadas: <a href="https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9" target="_blank">https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9</a></p>
+<div class="popup" id="popup">
+    <button class="close-btn" onclick="hidePopup()">×</button>
+    <h2>Informações da Estação</h2>
+    <p>Aqui estão as informações detalhadas da estação.</p>
 </div>
 
 <script>
-    var popup = document.getElementById("popup");
-    var overlayImage = document.getElementById("overlayImage");
-    var detectionInfo = document.getElementById("detectionInfo");
-
-    // Variáveis para armazenar os dados anteriores
-    var previousData = {
-        station: '',
-        time: ''
-    };
-
-    function togglePopup() {
-        if (popup.classList.contains("show")) {
-            popup.classList.remove("show");
-        } else {
-            var overlayRect = overlayImage.getBoundingClientRect();
-            var popupWidth = popup.offsetWidth;
-            var popupHeight = popup.offsetHeight;
-            var top = overlayRect.top - popupHeight - 10;
-            var left = overlayRect.left + (overlayRect.width / 2) - (popupWidth / 2);
-
-            popup.style.top = top + "px";
-            popup.style.left = left + "px";
-            popup.classList.add("show");
-        }
+    // Exibir o popup ao clicar na imagem
+    function showPopup() {
+        document.getElementById("popup").classList.add("show");
     }
 
-    function updateTable(data) {
-        document.getElementById("station").textContent = data.station || '-';
-        document.getElementById("time").textContent = data.time || '-';
-        detectionInfo.textContent = `Estação: ${data.station || '-'}, Hora: ${data.time || '-'}`;
+    // Fechar o popup
+    function hidePopup() {
+        document.getElementById("popup").classList.remove("show");
     }
 
-    async function fetchDataAndUpdateTable() {
-        try {
-            const response = await fetch("http://192.168.209.231/data");
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
+    // Exemplo de função para carregar dados (substituir com chamada real do backend)
+    function fetchMonitoringData() {
+        // Simulando dados recebidos
+        const data = [
+            { station: "Estação A", time: "10:00 AM" },
+            { station: "Estação B", time: "11:00 AM" }
+        ];
 
-            // Verifica se os novos dados são diferentes dos dados anteriores
-            if (data.station !== previousData.station || data.time !== previousData.time) {
-                updateTable(data);
+        // Preencher a tabela com os dados
+        const tbody = document.getElementById("table-body");
+        tbody.innerHTML = ""; // Limpar a tabela antes de preencher
 
-                // Adiciona a classe de piscar apenas se os dados forem diferentes
-                overlayImage.classList.add('blink');
-                setTimeout(() => {
-                    overlayImage.classList.remove('blink');
-                }, 2500);
+        data.forEach(item => {
+            const row = document.createElement("tr");
+            const stationCell = document.createElement("td");
+            const timeCell = document.createElement("td");
 
-                // Atualiza os dados anteriores com os novos dados
-                previousData = data;
-            }
-        } catch (error) {
-            console.error('Erro ao obter dados:', error);
+            stationCell.textContent = item.station;
+            timeCell.textContent = item.time;
 
-            document.querySelector('.table-container').innerHTML = `<h1>Erro ao carregar dados</h1><p>Por favor, tente novamente mais tarde.</p>`;
-        }
+            row.appendChild(stationCell);
+            row.appendChild(timeCell);
+            tbody.appendChild(row);
+        });
     }
 
-    overlayImage.addEventListener("click", togglePopup);
-    setInterval(fetchDataAndUpdateTable, 5000);
+    // Chamar a função ao carregar a página
+    window.onload = fetchMonitoringData;
 </script>
 
 </body>
