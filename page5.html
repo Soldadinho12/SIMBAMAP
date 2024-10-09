@@ -199,42 +199,50 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
                     <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html"><span class="mobi-mbri mobi-mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbrib-map-pin mbr-iconfont mbr-iconfont-btn"></span>Mapa</a></li>
-                </ul>  
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbrib-map-pin mbr-iconfont mbr-iconfont-btn"></span>SIMBA-Map</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#slider4-x"><span class="mobi-mbri mobi-mbri-users mbr-iconfont mbr-iconfont-btn"></span>Saiba mais</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="estacao-simba.html"><span class="mobi-mbri mobi-mbri-setting mbr-iconfont mbr-iconfont-btn"></span>Nosso sistema</a></li>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html#contacts1-z"><span class="mobi-mbri mobi-mbri-contact-form mbr-iconfont mbr-iconfont-btn"></span>Contato</a></li>
+                </ul>
             </div>
         </div>
     </nav>
 </section>
 
-<section class="container">
-    <div class="image-container">
-        <img src="assets/images/SIMBAmap.png" alt="Mapa SIMBA" class="map-image">
-        <img src="assets/images/SIMBAsymbol.png" alt="Sobreposição" class="overlay-image" onclick="showPopup()">
-        <img src="assets/images/additional.png" alt="Imagem Adicional" class="additional-image">
-    </div>
+<div class="image-container">
+    <img src="assets/images/mapa1.jpg" alt="Imagem do mapa" class="map-image">
+    <img src="assets/images/simbolo.png" alt="Imagem sobreposta" class="overlay-image" id="overlayImage">
+    <img src="assets/images/Casa Soldadinho.png" alt="Imagem adicional" class="additional-image">
+</div>
 
-    <div id="popup" class="popup">
-        <button class="close-btn" onclick="closePopup()">x</button>
-        <h2>Detalhes da Estação</h2>
-        <p>Estação: Estação Central</p>
-        <p>Horário: 10:00 AM</p>
-    </div>
+<div class="table-container">
+    <h1>Dados de Monitoramento</h1>
+    <table id="monitoring-table">
+        <thead>
+            <tr>
+                <th>Parâmetro</th>
+                <th>Última Detecção</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Estação</td>
+                <td id="station">-</td>
+            </tr>
+            <tr>
+                <td>Horário</td>
+                <td id="time">-</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <div class="table-container">
-        <h1>Dados de Monitoramento</h1>
-        <table id="monitoring-table" border="1">
-            <thead>
-                <tr>
-                    <th>Estação</th>
-                    <th>Horário</th>
-                </tr>
-            </thead>
-            <tbody id="table-body">
-                <!-- Os dados de monitoramento serão inseridos aqui -->
-            </tbody>
-        </table>
-    </div>
-</section>
+<div id="popup" class="popup">
+    <button class="close-btn" onclick="togglePopup()">×</button>
+    <h2>Estação 01</h2>
+    <p>Última Detecção: <span id="detectionInfo">-</span></p>
+    <p>Coordenadas: <a href="https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9" target="_blank">https://maps.app.goo.gl/LePgTkiAhQMp7Cgc9</a></p>
+</div>
 
 <script>
     var popup = document.getElementById("popup");
@@ -264,54 +272,42 @@
     }
 
     function updateTable(data) {
-        // Atualiza a tabela com os dados recebidos
-        document.getElementById("station").textContent = data.estacao || '-';
-        document.getElementById("time").textContent = data.horario || '-';
-        detectionInfo.textContent = `Estação: ${data.estacao || '-'}, Hora: ${data.horario || '-'}`;
+        document.getElementById("station").textContent = data.station || '-';
+        document.getElementById("time").textContent = data.time || '-';
+        detectionInfo.textContent = Estação: ${data.station || '-'}, Hora: ${data.time || '-'};
     }
 
-    // Supondo que os dados cheguem automaticamente à página via algum método (exemplo: WebSocket ou AJAX)
-    function receiveDataFromESP32(data) {
-        // Verifica se os novos dados são diferentes dos dados anteriores
-        if (data.estacao !== previousData.station || data.horario !== previousData.time) {
-            updateTable(data);
+    async function fetchDataAndUpdateTable() {
+        try {
+            const response = await fetch("http://192.168.209.231/data");
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
 
-            // Adiciona a classe de piscar apenas se os dados forem diferentes
-            overlayImage.classList.add('blink');
-            setTimeout(() => {
-                overlayImage.classList.remove('blink');
-            }, 2500);
+            // Verifica se os novos dados são diferentes dos dados anteriores
+            if (data.station !== previousData.station || data.time !== previousData.time) {
+                updateTable(data);
 
-            // Atualiza os dados anteriores com os novos dados
-            previousData.station = data.estacao;
-            previousData.time = data.horario;
+                // Adiciona a classe de piscar apenas se os dados forem diferentes
+                overlayImage.classList.add('blink');
+                setTimeout(() => {
+                    overlayImage.classList.remove('blink');
+                }, 2500);
+
+                // Atualiza os dados anteriores com os novos dados
+                previousData = data;
+            }
+        } catch (error) {
+            console.error('Erro ao obter dados:', error);
+
+            document.querySelector('.table-container').innerHTML = <h1>Erro ao carregar dados</h1><p>Por favor, tente novamente mais tarde.</p>;
         }
     }
 
-    // Função simulada para receber dados (aqui você pode substituir pelo método de recebimento real)
-    // Esta função deve ser chamada quando o ESP32 enviar os dados para a página
-    // Exemplo: via WebSocket ou outro canal direto
-    function simulateIncomingData() {
-        const simulatedData = {
-            estacao: "Estação 01",
-            horario: new Date().toLocaleTimeString()
-        };
-        receiveDataFromESP32(simulatedData);
-    }
-
-    // Adiciona evento de clique à imagem sobreposta
     overlayImage.addEventListener("click", togglePopup);
-
-    // Para fins de teste, simulamos dados chegando a cada 5 segundos
-    setInterval(simulateIncomingData, 5000);
+    setInterval(fetchDataAndUpdateTable, 5000);
 </script>
 
-<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/parallax/jarallax.min.js"></script>
-<script src="assets/smoothscroll/smooth-scroll.js"></script>
-<script src="assets/dropdown/js/nav-dropdown.js"></script>
-<script src="assets/dropdown/js/navbar-dropdown.js"></script>
-<script src="assets/theme/js/script.js"></script>
 </body>
 </html>
-
