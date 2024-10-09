@@ -199,22 +199,29 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
                     <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="index.html"><span class="mobi-mbri mobi-mbri-home mbr-iconfont mbr-iconfont-btn"></span>Home</a></li>
-                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbri-speed mbr-iconfont mbr-iconfont-btn"></span>Monitoramento</a></li>
-                </ul>
+                    <li class="nav-item"><a class="nav-link link text-white text-primary display-4" href="page5.html"><span class="mbrib-map-pin mbr-iconfont mbr-iconfont-btn"></span>Mapa</a></li>
+                </ul>  
             </div>
         </div>
     </nav>
 </section>
 
-<section id="content" class="container">
-    <!-- Conteúdo da página -->
+<section class="container">
     <div class="image-container">
-        <img class="map-image" src="assets/images/mapa.jpg" alt="Map Image">
-        <img class="overlay-image blink" src="assets/images/pino.png" alt="Overlay Image" onclick="showPopup()">
+        <img src="assets/images/SIMBAmap.png" alt="Mapa SIMBA" class="map-image">
+        <img src="assets/images/SIMBAsymbol.png" alt="Sobreposição" class="overlay-image" onclick="showPopup()">
+        <img src="assets/images/additional.png" alt="Imagem Adicional" class="additional-image">
+    </div>
+
+    <div id="popup" class="popup">
+        <button class="close-btn" onclick="closePopup()">x</button>
+        <h2>Detalhes da Estação</h2>
+        <p>Estação: Estação Central</p>
+        <p>Horário: 10:00 AM</p>
     </div>
 
     <div class="table-container">
-        <h1>Dados Recebidos</h1>
+        <h1>Dados de Monitoramento</h1>
         <table id="monitoring-table" border="1">
             <thead>
                 <tr>
@@ -223,58 +230,56 @@
                 </tr>
             </thead>
             <tbody id="table-body">
-                <!-- Dados da tabela serão preenchidos aqui -->
+                <!-- Os dados de monitoramento serão inseridos aqui -->
             </tbody>
         </table>
     </div>
 </section>
 
-<div class="popup" id="popup">
-    <button class="close-btn" onclick="hidePopup()">×</button>
-    <h2>Informações da Estação</h2>
-    <p>Aqui estão as informações detalhadas da estação.</p>
-</div>
-
 <script>
-    // Exibir o popup ao clicar na imagem
     function showPopup() {
-        document.getElementById("popup").classList.add("show");
+        document.getElementById('popup').classList.add('show');
     }
 
-    // Fechar o popup
-    function hidePopup() {
-        document.getElementById("popup").classList.remove("show");
+    function closePopup() {
+        document.getElementById('popup').classList.remove('show');
     }
 
-    // Exemplo de função para carregar dados (substituir com chamada real do backend)
     function fetchMonitoringData() {
-        // Simulando dados recebidos
-        const data = [
-            { station: "Estação A", time: "10:00 AM" },
-            { station: "Estação B", time: "11:00 AM" }
-        ];
+        // Simulando a ausência de dados recebidos
+        const data = []; // Array vazio para simular falta de dados
 
         // Preencher a tabela com os dados
         const tbody = document.getElementById("table-body");
         tbody.innerHTML = ""; // Limpar a tabela antes de preencher
 
-        data.forEach(item => {
-            const row = document.createElement("tr");
-            const stationCell = document.createElement("td");
-            const timeCell = document.createElement("td");
+        if (data.length > 0) {
+            data.forEach(item => {
+                const row = document.createElement("tr");
+                const stationCell = document.createElement("td");
+                const timeCell = document.createElement("td");
 
-            stationCell.textContent = item.station;
-            timeCell.textContent = item.time;
+                stationCell.textContent = item.station;
+                timeCell.textContent = item.time;
 
-            row.appendChild(stationCell);
-            row.appendChild(timeCell);
-            tbody.appendChild(row);
-        });
+                row.appendChild(stationCell);
+                row.appendChild(timeCell);
+                tbody.appendChild(row);
+            });
+        }
+        // A tabela permanece como está, caso não haja dados
     }
 
-    // Chamar a função ao carregar a página
+    // Chama a função ao carregar a página
     window.onload = fetchMonitoringData;
 </script>
 
+<script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="assets/parallax/jarallax.min.js"></script>
+<script src="assets/smoothscroll/smooth-scroll.js"></script>
+<script src="assets/dropdown/js/nav-dropdown.js"></script>
+<script src="assets/dropdown/js/navbar-dropdown.js"></script>
+<script src="assets/theme/js/script.js"></script>
 </body>
 </html>
+
